@@ -4,11 +4,20 @@ user = require('./routes/user')
 http = require('http')
 path = require('path')
 partials = require('express-partials')
+nib = require 'nib'
+stylus = require 'stylus'
 
 app = express()
 
 app.engine('hamlc', require('haml-coffee').__express)
 app.use(partials())
+
+compile = (str, path) ->
+  stylus(str)
+    .set('filename', path)
+    .set('compress', true)
+    .use(nib())
+
 
 app.configure ->
   app.set('port', process.env.PORT || 3000)
@@ -22,7 +31,10 @@ app.configure ->
   app.use(express.cookieParser('your secret here'))
   app.use(express.session())
   app.use(app.router)
-  app.use(require('stylus').middleware(__dirname + '/public'))
+  app.use(stylus.middleware
+    src: __dirname + '/public'
+    compile: compile
+  )
   app.use(express.static(path.join(__dirname, 'public')))
 
 app.configure 'development', ->

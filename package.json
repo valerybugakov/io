@@ -10,6 +10,7 @@
     "express-partials": "*",
     "haml-coffee": "*",
     "jade": "*",
-    "stylus": "*"
+    "stylus": "*",
+    "nib": "*"
   }
 }
